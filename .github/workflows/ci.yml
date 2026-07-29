@@ -62,7 +62,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install pytest pytest-cov pydantic pydantic-settings
-          pip install -e .
+          pip install .
       
       - name: Run physics engine tests
         run: |
