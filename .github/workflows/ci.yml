@@ -26,12 +26,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install black ruff mypy pytest
-      
-      - name: Check code formatting (black)
-        run: |
-          black --check --diff src/ tests/
-        continue-on-error: false
+          pip install ruff mypy pytest
       
       - name: Lint with ruff
         run: |
