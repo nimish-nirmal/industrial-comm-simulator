@@ -11,11 +11,11 @@ import json
 import logging
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from threading import Thread
-from typing import Any, Dict, Optional
-from urllib.parse import urlparse, parse_qs
+from typing import Any, Optional
+from urllib.parse import urlparse
 
 from src.core.device import Device, SimulationManager
-from src.protocols.base import ProtocolConfig, ProtocolEngine, ProtocolState
+from src.protocols.base import ProtocolConfig, ProtocolEngine
 
 logger = logging.getLogger(__name__)
 

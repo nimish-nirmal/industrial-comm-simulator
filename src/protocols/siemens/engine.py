@@ -8,11 +8,10 @@ through the Snap7 library's data blocks.
 from __future__ import annotations
 
 import logging
-import struct
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from src.core.device import Device, SimulationManager
-from src.protocols.base import ProtocolConfig, ProtocolEngine, ProtocolState
+from src.protocols.base import ProtocolConfig, ProtocolEngine
 
 logger = logging.getLogger(__name__)
 

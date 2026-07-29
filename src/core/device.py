@@ -11,15 +11,12 @@ import logging
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple
+from typing import Any, Callable, Dict, List, Optional
 
 from src.core.physics import (
     PhysicsEngine,
-    PhysicsConfig,
     SignalProfile,
     SignalState,
-    SignalType,
-    UnitCategory,
 )
 
 logger = logging.getLogger(__name__)

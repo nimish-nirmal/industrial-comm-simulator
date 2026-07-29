@@ -8,10 +8,10 @@ as OPC UA variables organized in the server's address space.
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from src.core.device import Device, SimulationManager
-from src.protocols.base import ProtocolConfig, ProtocolEngine, ProtocolState
+from src.protocols.base import ProtocolConfig, ProtocolEngine
 
 logger = logging.getLogger(__name__)
 

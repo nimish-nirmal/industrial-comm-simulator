@@ -6,11 +6,8 @@ Uses pydantic-settings to load from .env files with full validation.
 
 from __future__ import annotations
 
-import os
-from pathlib import Path
 from typing import Dict, List, Optional, Set
 
-from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 

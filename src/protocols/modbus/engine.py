@@ -67,10 +67,13 @@ except ImportError:
     except ImportError:
         # ModbusDeviceIdentification not available in newer pymodbus versions
         ModbusDeviceIdentification = None
-from pymodbus.server import StartTcpServer
-from pymodbus.server import StopServer
-from pymodbus.server import StartSerialServer
-from pymodbus.server import StopSerialServer
+from pymodbus.server import StartTcpServer, StartSerialServer
+try:
+    from pymodbus.server import StopServer, StopSerialServer
+except ImportError:
+    # StopServer/StopSerialServer not available in newer pymodbus versions
+    StopServer = None
+    StopSerialServer = None
 
 from src.core.device import Device, SimulationManager
 from src.protocols.base import ProtocolConfig, ProtocolEngine, ProtocolState

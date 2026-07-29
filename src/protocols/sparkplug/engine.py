@@ -10,12 +10,12 @@ from __future__ import annotations
 import json
 import logging
 import time
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import paho.mqtt.client as mqtt
 
 from src.core.device import Device, SimulationManager
-from src.protocols.base import ProtocolConfig, ProtocolEngine, ProtocolState
+from src.protocols.base import ProtocolConfig, ProtocolEngine
 
 logger = logging.getLogger(__name__)
 

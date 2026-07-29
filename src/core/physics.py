@@ -11,12 +11,11 @@ Simulates realistic industrial process values with:
 
 from __future__ import annotations
 
-import math
 import random
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Callable, Dict, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional
 
 
 class SignalType(Enum):
