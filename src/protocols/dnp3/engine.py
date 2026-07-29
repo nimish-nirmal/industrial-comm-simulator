@@ -298,8 +298,7 @@ class Dnp3Engine(ProtocolEngine):
             return
 
         logger.debug(
-            f"DNP3 request from {addr}: dest={destination}, src={source}, "
-            f"len={length}, ctrl={control:#04x}"
+            f"DNP3 request from {addr}: dest={destination}, src={source}, len={length}, ctrl={control:#04x}"
         )
 
         # Send response (simplified - acknowledges the request)
@@ -320,15 +319,13 @@ class Dnp3Engine(ProtocolEngine):
                 point = self._analog_points.get(device.device_id, {}).get(signal_name)
                 if point is not None:
                     logger.debug(
-                        f"DNP3 AnalogInput point={point}: "
-                        f"{state.current_value:.2f} {state.profile.unit}"
+                        f"DNP3 AnalogInput point={point}: {state.current_value:.2f} {state.profile.unit}"
                     )
             else:
                 point = self._binary_points.get(device.device_id, {}).get(signal_name)
                 if point is not None:
                     logger.debug(
-                        f"DNP3 BinaryInput point={point}: "
-                        f"{int(state.current_value)}"
+                        f"DNP3 BinaryInput point={point}: {int(state.current_value)}"
                     )
 
     def _handle_external_command(self, device_id: str, signal_name: str, value: float) -> None:

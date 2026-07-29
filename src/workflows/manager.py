@@ -331,8 +331,7 @@ class WorkflowManager:
         self.simulation.add_cluster(power_cluster)
 
         logger.info(
-            f"Created {len(self.simulation.clusters)} clusters with "
-            f"{sum(len(c.devices) for c in self.simulation.clusters.values())} devices"
+            f"Created {len(self.simulation.clusters)} clusters with {sum(len(c.devices) for c in self.simulation.clusters.values())} devices"
         )
 
     def _register_protocols(self) -> None:
@@ -566,9 +565,7 @@ class WorkflowManager:
                     for device in cluster.devices.values()
                 )
                 logger.info(
-                    f"Status: {len(self.simulation.clusters)} clusters, "
-                    f"{device_count} devices, {signal_count} signals, "
-                    f"{self.registry.count} protocols active"
+                    f"Status: {len(self.simulation.clusters)} clusters, {device_count} devices, {signal_count} signals, {self.registry.count} protocols active"
                 )
             except Exception as e:
                 logger.error(f"Status log error: {e}")

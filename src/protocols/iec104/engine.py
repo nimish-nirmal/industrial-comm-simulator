@@ -331,9 +331,7 @@ class Iec104Engine(ProtocolEngine):
         data += self._build_asdu_data(asdu)
 
         logger.debug(
-            f"Built ASDU: type={asdu.type_id}, COT={asdu.cot}, "
-            f"ASDU addr={asdu.asdu_address}, IOA={asdu.ioa}, "
-            f"value={asdu.value}"
+            f"Built ASDU: type={asdu.type_id}, COT={asdu.cot}, ASDU addr={asdu.asdu_address}, IOA={asdu.ioa}, value={asdu.value}"
         )
         return bytes(data)
 
@@ -414,8 +412,7 @@ class Iec104Engine(ProtocolEngine):
             )
 
             logger.debug(
-                f"Parsed ASDU: type={type_id}, COT={cot}, "
-                f"ASDU addr={asdu_address}, IOA={ioa}, value={value}"
+                f"Parsed ASDU: type={type_id}, COT={cot}, ASDU addr={asdu_address}, IOA={ioa}, value={value}"
             )
             return asdu
 
@@ -472,8 +469,7 @@ class Iec104Engine(ProtocolEngine):
             signal_name = self._ioa_to_signal.get(asdu.ioa)
             if signal_name and asdu.value is not None:
                 logger.info(
-                    f"IEC 104 command: IOA={asdu.ioa} ({signal_name}) "
-                    f"= {asdu.value}"
+                    f"IEC 104 command: IOA={asdu.ioa} ({signal_name}) = {asdu.value}"
                 )
 
                 # Update the simulation
@@ -504,8 +500,7 @@ class Iec104Engine(ProtocolEngine):
         if asdu.type_id == 100:  # C_IC_NA_1 (interrogation command)
             qoi = asdu.value if asdu.value else QOI_STATION
             logger.info(
-                f"Interrogation command: QOI={qoi} from "
-                f"{conn.addr[0]}:{conn.addr[1]}"
+                f"Interrogation command: QOI={qoi} from {conn.addr[0]}:{conn.addr[1]}"
             )
             # Send interrogation confirmation
             conf_asdu = Iec104Asdu(
@@ -549,8 +544,7 @@ class Iec104Engine(ProtocolEngine):
                 while len(buffer) >= 2:
                     if buffer[0] != 0x68:
                         logger.warning(
-                            f"Invalid start byte from {addr}: "
-                            f"0x{buffer[0]:02X}"
+                            f"Invalid start byte from {addr}: 0x{buffer[0]:02X}"
                         )
                         buffer = buffer[1:]
                         continue
@@ -620,8 +614,7 @@ class Iec104Engine(ProtocolEngine):
         self._server_socket.settimeout(1.0)
 
         logger.info(
-            f"IEC 104 server listening on {self.host}:{self.port} "
-            f"(ASDU address={self.asdu_address})"
+            f"IEC 104 server listening on {self.host}:{self.port} (ASDU address={self.asdu_address})"
         )
 
         # Start accept thread
@@ -702,8 +695,7 @@ class Iec104Engine(ProtocolEngine):
                         )
 
             logger.debug(
-                f"Published signal '{signal_name}' (IOA={ioa}): "
-                f"{state.current_value}"
+                f"Published signal '{signal_name}' (IOA={ioa}): {state.current_value}"
             )
 
     def _handle_external_command(

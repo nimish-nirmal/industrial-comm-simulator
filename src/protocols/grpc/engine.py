@@ -731,8 +731,7 @@ class GrpcEngine(ProtocolEngine):
             )
 
         logger.debug(
-            f"Published device '{device.device_id}' to "
-            f"{len(self._connections)} gRPC connections"
+            f"Published device '{device.device_id}' to {len(self._connections)} gRPC connections"
         )
 
     def _handle_external_command(

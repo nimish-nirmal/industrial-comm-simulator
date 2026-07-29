@@ -172,8 +172,7 @@ class ProfinetEngine(ProtocolEngine):
         self._pn_devices[device.device_id] = pn_device
 
         logger.debug(
-            f"Registered device '{device.device_id}' as PROFINET IO device "
-            f"with {len(pn_device.subslots)} subslots in slot {slot}"
+            f"Registered device '{device.device_id}' as PROFINET IO device with {len(pn_device.subslots)} subslots in slot {slot}"
         )
         return pn_device
 
@@ -420,8 +419,7 @@ class ProfinetEngine(ProtocolEngine):
             try:
                 self._udp_socket.sendto(rt_frame, ("<broadcast>", self.port))
                 logger.debug(
-                    f"Published {len(rt_frame)} bytes for device '{device.device_id}' "
-                    f"(cycle={pn_device.data_cycle_counter})"
+                    f"Published {len(rt_frame)} bytes for device '{device.device_id}' (cycle={pn_device.data_cycle_counter})"
                 )
             except Exception as e:
                 logger.error(f"Failed to publish RT frame: {e}")

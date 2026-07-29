@@ -49,8 +49,7 @@ class BacnetEngine(ProtocolEngine):
     def _start_engine(self) -> None:
         """Start the BACnet/IP server."""
         logger.info(
-            f"BACnet engine ready (device_id={self.device_id}, "
-            f"endpoint={self.ip}:{self.port})"
+            f"BACnet engine ready (device_id={self.device_id}, endpoint={self.ip}:{self.port})"
         )
         logger.info("Note: BACpypes requires root privileges for raw sockets")
 
@@ -64,8 +63,7 @@ class BacnetEngine(ProtocolEngine):
             value = state.current_value
             profile = state.profile
             logger.debug(
-                f"BACnet {device.device_id}/{signal_name}: "
-                f"{value:.2f} {profile.unit}"
+                f"BACnet {device.device_id}/{signal_name}: {value:.2f} {profile.unit}"
             )
 
     def _handle_external_command(self, device_id: str, signal_name: str, value: float) -> None:

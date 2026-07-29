@@ -143,8 +143,7 @@ class EthernetIpEngine(ProtocolEngine):
             else:
                 data += struct.pack("<f", value)
         logger.debug(
-            f"Packed assembly data for device '{device.device_id}': "
-            f"{len(data)} bytes"
+            f"Packed assembly data for device '{device.device_id}': {len(data)} bytes"
         )
         return data
 
@@ -174,8 +173,7 @@ class EthernetIpEngine(ProtocolEngine):
                 values[signal_name] = val
                 offset += 4
         logger.debug(
-            f"Unpacked assembly data for device '{device.device_id}': "
-            f"{len(values)} values"
+            f"Unpacked assembly data for device '{device.device_id}': {len(values)} values"
         )
         return values
 
@@ -201,8 +199,7 @@ class EthernetIpEngine(ProtocolEngine):
         self._device_to_assembly[device.device_id] = instance_id
 
         logger.debug(
-            f"Registered device '{device.device_id}' as CIP Assembly "
-            f"instance {instance_id} with {len(assembly.signal_names)} signals"
+            f"Registered device '{device.device_id}' as CIP Assembly instance {instance_id} with {len(assembly.signal_names)} signals"
         )
         return instance_id
 
@@ -255,8 +252,7 @@ class EthernetIpEngine(ProtocolEngine):
         request_path = data[2 : 2 + path_size]
 
         logger.debug(
-            f"CIP request: service=0x{service:02X}, "
-            f"path_size={path_size} bytes"
+            f"CIP request: service=0x{service:02X}, path_size={path_size} bytes"
         )
 
         # Parse class and instance from path
@@ -299,8 +295,7 @@ class EthernetIpEngine(ProtocolEngine):
     ) -> bytes:
         """Handle CIP GetAttributeSingle request."""
         logger.debug(
-            f"GetAttributeSingle: class=0x{class_id:04X}, "
-            f"instance={instance_id}, session={session_id}"
+            f"GetAttributeSingle: class=0x{class_id:04X}, instance={instance_id}, session={session_id}"
         )
 
         if class_id == CIP_CLASS_ASSEMBLY:
@@ -330,8 +325,7 @@ class EthernetIpEngine(ProtocolEngine):
     ) -> bytes:
         """Handle CIP GetAttributeAll request."""
         logger.debug(
-            f"GetAttributeAll: class=0x{class_id:04X}, "
-            f"instance={instance_id}, session={session_id}"
+            f"GetAttributeAll: class=0x{class_id:04X}, instance={instance_id}, session={session_id}"
         )
 
         if class_id == CIP_CLASS_IDENTITY and instance_id == 1:
@@ -374,8 +368,7 @@ class EthernetIpEngine(ProtocolEngine):
     ) -> bytes:
         """Handle CIP SetAttributeSingle request (external command)."""
         logger.debug(
-            f"SetAttributeSingle: class=0x{class_id:04X}, "
-            f"instance={instance_id}, session={session_id}"
+            f"SetAttributeSingle: class=0x{class_id:04X}, instance={instance_id}, session={session_id}"
         )
 
         if class_id == CIP_CLASS_ASSEMBLY:
@@ -404,8 +397,7 @@ class EthernetIpEngine(ProtocolEngine):
                         assembly.device_id, signal_name, value
                     )
                 logger.info(
-                    f"CIP SetAttributeSingle: updated "
-                    f"{assembly.device_id} with {len(values)} values"
+                    f"CIP SetAttributeSingle: updated {assembly.device_id} with {len(values)} values"
                 )
 
             # Build success response
@@ -426,8 +418,7 @@ class EthernetIpEngine(ProtocolEngine):
         response += struct.pack("<H", error_code)
         response += struct.pack("<B", 0x00)  # Additional code
         logger.debug(
-            f"CIP error response: service=0x{service:02X}, "
-            f"code=0x{error_code:04X}"
+            f"CIP error response: service=0x{service:02X}, code=0x{error_code:04X}"
         )
         return response
 
@@ -494,8 +485,7 @@ class EthernetIpEngine(ProtocolEngine):
                 session_id = header["session_id"]
 
                 logger.debug(
-                    f"CIP packet: command=0x{command:04X}, "
-                    f"length={length}, session={session_id}"
+                    f"CIP packet: command=0x{command:04X}, length={length}, session={session_id}"
                 )
 
                 # Read the command-specific data
@@ -612,8 +602,7 @@ class EthernetIpEngine(ProtocolEngine):
         assembly.data = self._pack_assembly_data(device)
 
         logger.debug(
-            f"Published device '{device.device_id}' to CIP Assembly "
-            f"instance {instance_id}: {len(assembly.data)} bytes"
+            f"Published device '{device.device_id}' to CIP Assembly instance {instance_id}: {len(assembly.data)} bytes"
         )
 
     def _handle_external_command(
@@ -634,6 +623,5 @@ class EthernetIpEngine(ProtocolEngine):
                 if device:
                     assembly.data = self._pack_assembly_data(device)
                     logger.debug(
-                        f"Updated assembly {instance_id} data after "
-                        f"external command"
+                        f"Updated assembly {instance_id} data after external command"
                     )

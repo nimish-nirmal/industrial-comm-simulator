@@ -235,8 +235,7 @@ class CanopenEngine(ProtocolEngine):
         self._object_dictionary[index][subindex] = entry
 
         logger.debug(
-            f"Added OD entry: 0x{index:04X}:{subindex:02X} "
-            f"'{name}' (type={data_type}, access={access})"
+            f"Added OD entry: 0x{index:04X}:{subindex:02X} '{name}' (type={data_type}, access={access})"
         )
 
     def _init_communication_profile(self) -> None:
@@ -366,8 +365,7 @@ class CanopenEngine(ProtocolEngine):
             self._signal_to_od[signal_name] = (device_index, subindex)
 
         logger.info(
-            f"Mapped device '{device.device_id}' to OD index "
-            f"0x{device_index:04X} with {num_signals} signals"
+            f"Mapped device '{device.device_id}' to OD index 0x{device_index:04X} with {num_signals} signals"
         )
 
     def _setup_pdo_mapping(self, device: Device) -> None:
@@ -411,8 +409,7 @@ class CanopenEngine(ProtocolEngine):
         self._pdo_mappings[2] = rpdo1
 
         logger.debug(
-            f"PDO mapping: TPDO1 has {len(tpdo1.mapped_entries)} entries, "
-            f"RPDO1 has {len(rpdo1.mapped_entries)} entries"
+            f"PDO mapping: TPDO1 has {len(tpdo1.mapped_entries)} entries, RPDO1 has {len(rpdo1.mapped_entries)} entries"
         )
 
     def _encode_sdo_data(self, data_type: int, value: Any) -> bytes:
@@ -486,8 +483,7 @@ class CanopenEngine(ProtocolEngine):
             subentries = self._object_dictionary[index]
             if subindex not in subentries:
                 logger.warning(
-                    f"SDO download: subindex 0x{subindex:02X} not found "
-                    f"in index 0x{index:04X}"
+                    f"SDO download: subindex 0x{subindex:02X} not found in index 0x{index:04X}"
                 )
                 return False, SDO_ABORT_NO_SUCH_OBJECT
 
@@ -495,8 +491,7 @@ class CanopenEngine(ProtocolEngine):
 
             if entry.access not in ("rw", "wo"):
                 logger.warning(
-                    f"SDO download: entry 0x{index:04X}:{subindex:02X} "
-                    f"is read-only"
+                    f"SDO download: entry 0x{index:04X}:{subindex:02X} is read-only"
                 )
                 return False, SDO_ABORT_UNSUPPORTED_ACCESS
 
@@ -528,9 +523,7 @@ class CanopenEngine(ProtocolEngine):
                                         float(new_value),
                                     )
                                     logger.debug(
-                                        f"SDO download -> simulation: "
-                                        f"{device.device_id}.{signal_name} "
-                                        f"= {new_value}"
+                                        f"SDO download -> simulation: {device.device_id}.{signal_name} = {new_value}"
                                     )
                                     break
                     break
@@ -555,8 +548,7 @@ class CanopenEngine(ProtocolEngine):
             subentries = self._object_dictionary[index]
             if subindex not in subentries:
                 logger.warning(
-                    f"SDO upload: subindex 0x{subindex:02X} not found "
-                    f"in index 0x{index:04X}"
+                    f"SDO upload: subindex 0x{subindex:02X} not found in index 0x{index:04X}"
                 )
                 return False, None, SDO_ABORT_NO_SUCH_OBJECT
 
@@ -564,8 +556,7 @@ class CanopenEngine(ProtocolEngine):
 
             if entry.access == "wo":
                 logger.warning(
-                    f"SDO upload: entry 0x{index:04X}:{subindex:02X} "
-                    f"is write-only"
+                    f"SDO upload: entry 0x{index:04X}:{subindex:02X} is write-only"
                 )
                 return False, None, SDO_ABORT_UNSUPPORTED_ACCESS
 
@@ -618,8 +609,7 @@ class CanopenEngine(ProtocolEngine):
         subindex = data[3]
 
         logger.debug(
-            f"SDO message: cmd=0x{command:02X}, "
-            f"index=0x{index:04X}, subindex=0x{subindex:02X}"
+            f"SDO message: cmd=0x{command:02X}, index=0x{index:04X}, subindex=0x{subindex:02X}"
         )
 
         if command == SDO_CMD_DOWNLOAD_REQ:
@@ -705,8 +695,7 @@ class CanopenEngine(ProtocolEngine):
 
             if len(data) < len(mapping.mapped_entries):
                 logger.warning(
-                    f"RPDO{1} data too short: {len(data)} bytes "
-                    f"for {len(mapping.mapped_entries)} entries"
+                    f"RPDO{1} data too short: {len(data)} bytes for {len(mapping.mapped_entries)} entries"
                 )
                 continue
 
@@ -741,9 +730,7 @@ class CanopenEngine(ProtocolEngine):
                                                     float(new_value),
                                                 )
                                                 logger.debug(
-                                                    f"RPDO -> simulation: "
-                                                    f"{device.device_id}.{signal_name} "
-                                                    f"= {new_value}"
+                                                    f"RPDO -> simulation: {device.device_id}.{signal_name} = {new_value}"
                                                 )
                                                 break
                                 break
@@ -790,8 +777,7 @@ class CanopenEngine(ProtocolEngine):
         self._nmt_state = NMT_STATE_PRE_OPERATIONAL
 
         logger.info(
-            f"CANopen engine started (node_id={self.node_id}, "
-            f"interface={self.can_interface})"
+            f"CANopen engine started (node_id={self.node_id}, interface={self.can_interface})"
         )
 
         if self.use_socketcan:
@@ -807,8 +793,7 @@ class CanopenEngine(ProtocolEngine):
                 )
             except Exception as e:
                 logger.warning(
-                    f"Could not bind to SocketCAN interface "
-                    f"'{self.can_interface}': {e}"
+                    f"Could not bind to SocketCAN interface '{self.can_interface}': {e}"
                 )
                 self._can_socket = None
 
@@ -850,8 +835,7 @@ class CanopenEngine(ProtocolEngine):
         tpdo_data = self._build_tpdo_message()
         if tpdo_data:
             logger.debug(
-                f"TPDO1 data for device '{device.device_id}': "
-                f"{tpdo_data.hex()} ({len(tpdo_data)} bytes)"
+                f"TPDO1 data for device '{device.device_id}': {tpdo_data.hex()} ({len(tpdo_data)} bytes)"
             )
 
     def _handle_external_command(

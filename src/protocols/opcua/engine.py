@@ -44,8 +44,7 @@ class OpcUaEngine(ProtocolEngine):
     def _start_engine(self) -> None:
         """Start the OPC UA server."""
         logger.info(
-            f"OPC UA engine ready (endpoint={self.endpoint}, "
-            f"server_name={self.server_name})"
+            f"OPC UA engine ready (endpoint={self.endpoint}, server_name={self.server_name})"
         )
         logger.info("Note: OPC UA requires 'opcua-asyncio' package")
 
@@ -57,8 +56,7 @@ class OpcUaEngine(ProtocolEngine):
         """Publish device signal values as OPC UA variables."""
         for signal_name, state in device.signals.items():
             logger.debug(
-                f"OPC UA {device.device_id}/{signal_name}: "
-                f"{state.current_value:.2f} {state.profile.unit}"
+                f"OPC UA {device.device_id}/{signal_name}: {state.current_value:.2f} {state.profile.unit}"
             )
 
     def _handle_external_command(self, device_id: str, signal_name: str, value: float) -> None:

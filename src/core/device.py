@@ -183,8 +183,7 @@ class DeviceCluster:
 
         self._initialized = True
         logger.info(
-            f"Cluster '{config.name}' ({config.cluster_id}) initialized "
-            f"with {len(self.devices)} devices"
+            f"Cluster '{config.name}' ({config.cluster_id}) initialized with {len(self.devices)} devices"
         )
 
     @property

@@ -511,8 +511,7 @@ class Iec61850Engine(ProtocolEngine):
         self._logical_devices[ld_name] = ld
 
         logger.info(
-            f"Created Logical Device '{ld_name}' with "
-            f"{len(ld.logical_nodes)} LNs for device '{device.device_id}'"
+            f"Created Logical Device '{ld_name}' with {len(ld.logical_nodes)} LNs for device '{device.device_id}'"
         )
         return ld
 
@@ -585,8 +584,7 @@ class Iec61850Engine(ProtocolEngine):
             da.quality = 0x00  # Good quality
 
             logger.debug(
-                f"Updated IEC 61850 attribute: {ld_name}/{ln_name}/"
-                f"{do_name}.{da_name} = {da.value}"
+                f"Updated IEC 61850 attribute: {ld_name}/{ln_name}/{do_name}.{da_name} = {da.value}"
             )
 
     def _handle_mms_read(
@@ -672,8 +670,7 @@ class Iec61850Engine(ProtocolEngine):
                                     device.device_id, signal_name, float_val
                                 )
                                 logger.debug(
-                                    f"MMS Write -> simulation: "
-                                    f"{device.device_id}.{signal_name} = {float_val}"
+                                    f"MMS Write -> simulation: {device.device_id}.{signal_name} = {float_val}"
                                 )
                                 break
                 break
@@ -702,9 +699,7 @@ class Iec61850Engine(ProtocolEngine):
                             da.value = value
                             da.timestamp = 0.0
                             logger.debug(
-                                f"Updated IEC 61850 attribute after "
-                                f"external command: {ld_name}/{ln_name}/"
-                                f"{do_name}.{da_name} = {value}"
+                                f"Updated IEC 61850 attribute after external command: {ld_name}/{ln_name}/{do_name}.{da_name} = {value}"
                             )
 
     def get_data_model(self) -> Dict[str, Any]:

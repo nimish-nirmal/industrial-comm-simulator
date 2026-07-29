@@ -434,8 +434,7 @@ class WebSocketEngine(ProtocolEngine):
 
             if device_id and signal_name is not None and value is not None:
                 logger.info(
-                    f"WebSocket command from {client.addr}: "
-                    f"{device_id}.{signal_name} = {value}"
+                    f"WebSocket command from {client.addr}: {device_id}.{signal_name} = {value}"
                 )
                 self.handle_command(device_id, signal_name, float(value))
 
@@ -470,9 +469,7 @@ class WebSocketEngine(ProtocolEngine):
                     client.subscribed_signals.add(signal_name)
 
                 logger.info(
-                    f"Client {client.addr} subscribed to "
-                    f"{'all' if not signal_name else signal_name} "
-                    f"signals for device '{device_id}'"
+                    f"Client {client.addr} subscribed to {'all' if not signal_name else signal_name} signals for device '{device_id}'"
                 )
 
                 self._send_message(
@@ -495,8 +492,7 @@ class WebSocketEngine(ProtocolEngine):
                     client.subscribed_signals.discard(signal_name)
 
                 logger.info(
-                    f"Client {client.addr} unsubscribed from "
-                    f"device '{device_id}'"
+                    f"Client {client.addr} unsubscribed from device '{device_id}'"
                 )
 
         elif msg_type == "ping":
@@ -729,8 +725,7 @@ class WebSocketEngine(ProtocolEngine):
             )
 
         logger.debug(
-            f"Published device '{device.device_id}' to "
-            f"{len(self._clients)} WebSocket clients"
+            f"Published device '{device.device_id}' to {len(self._clients)} WebSocket clients"
         )
 
     def _handle_external_command(
@@ -738,8 +733,7 @@ class WebSocketEngine(ProtocolEngine):
     ) -> None:
         """Handle an external command and notify WebSocket clients."""
         logger.info(
-            f"WebSocket external command: "
-            f"{device_id}.{signal_name} = {value}"
+            f"WebSocket external command: {device_id}.{signal_name} = {value}"
         )
         # Notify clients about the command
         message = json.dumps({
