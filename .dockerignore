@@ -37,11 +37,11 @@ Dockerfile
 docker-compose.yml
 .dockerignore
 
-# Scripts
-scripts/
+# Scripts (keep for Docker build)
+# scripts/
 
-# Configs (will be mounted as volume)
-configs/
+# Configs (keep for Docker build)
+# configs/
 
 # Logs and scenarios
 logs/
