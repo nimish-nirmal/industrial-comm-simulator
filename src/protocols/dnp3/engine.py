@@ -203,7 +203,10 @@ class Dnp3Engine(ProtocolEngine):
             name="dnp3-accept",
         )
         self._accept_thread.start()
-        logger.info(f"DNP3 outstation started on {self.host}:{self.port} (address={self.outstation_address})")
+        logger.info(
+            f"DNP3 outstation started on {self.host}:{self.port} "
+            f"(address={self.outstation_address})"
+        )
 
     def _stop_engine(self) -> None:
         """Stop the DNP3 outstation."""
@@ -298,7 +301,8 @@ class Dnp3Engine(ProtocolEngine):
             return
 
         logger.debug(
-            f"DNP3 request from {addr}: dest={destination}, src={source}, len={length}, ctrl={control:#04x}"
+            f"DNP3 request from {addr}: dest={destination}, src={source}, len={length}, "
+                f"ctrl={control:#04x}"
         )
 
         # Send response (simplified - acknowledges the request)
@@ -319,7 +323,8 @@ class Dnp3Engine(ProtocolEngine):
                 point = self._analog_points.get(device.device_id, {}).get(signal_name)
                 if point is not None:
                     logger.debug(
-                        f"DNP3 AnalogInput point={point}: {state.current_value:.2f} {state.profile.unit}"
+                        f"DNP3 AnalogInput point={point}: "
+                            f"{state.current_value:.2f} {state.profile.unit}"
                     )
             else:
                 point = self._binary_points.get(device.device_id, {}).get(signal_name)

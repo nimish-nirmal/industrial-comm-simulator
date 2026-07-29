@@ -1,8 +1,6 @@
 """Test all 15 protocol engines for basic functionality."""
 from __future__ import annotations
 
-import pytest
-
 
 class TestAllProtocols:
     """Test suite for all protocol engines."""
@@ -179,25 +177,25 @@ class TestAllProtocols:
 
     def test_all_protocols_registry(self):
         """Test that all protocols can be registered in a registry."""
-        from src.protocols.base import ProtocolRegistry
-        from src.protocols.modbus import ModbusEngine
         from src.protocols.bacnet import BacnetEngine
-        from src.protocols.mqtt import MqttEngine
-        from src.protocols.opcua import OpcUaEngine
-        from src.protocols.siemens import SiemensEngine
-        from src.protocols.http import HttpEngine
-        from src.protocols.sparkplug import SparkplugEngine
+        from src.protocols.base import ProtocolRegistry
+        from src.protocols.canopen import CanopenEngine
         from src.protocols.dnp3 import Dnp3Engine
         from src.protocols.ethernetip import EthernetIpEngine
-        from src.protocols.profinet import ProfinetEngine
-        from src.protocols.canopen import CanopenEngine
-        from src.protocols.iec61850 import Iec61850Engine
-        from src.protocols.iec104 import Iec104Engine
-        from src.protocols.websocket import WebSocketEngine
         from src.protocols.grpc import GrpcEngine
+        from src.protocols.http import HttpEngine
+        from src.protocols.iec104 import Iec104Engine
+        from src.protocols.iec61850 import Iec61850Engine
+        from src.protocols.modbus import ModbusEngine
+        from src.protocols.mqtt import MqttEngine
+        from src.protocols.opcua import OpcUaEngine
+        from src.protocols.profinet import ProfinetEngine
+        from src.protocols.siemens import SiemensEngine
+        from src.protocols.sparkplug import SparkplugEngine
+        from src.protocols.websocket import WebSocketEngine
 
         registry = ProtocolRegistry()
-        
+
         # Register all 15 protocols
         engines = [
             ModbusEngine(name="modbus"),

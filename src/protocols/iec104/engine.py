@@ -52,11 +52,11 @@ import socket
 import struct
 import threading
 import time
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Any, Dict, Optional, Tuple
 
 from src.core.device import Device, SimulationManager
-from src.protocols.base import ProtocolConfig, ProtocolEngine, ProtocolState
+from src.protocols.base import ProtocolConfig, ProtocolEngine
 
 logger = logging.getLogger(__name__)
 
@@ -331,7 +331,8 @@ class Iec104Engine(ProtocolEngine):
         data += self._build_asdu_data(asdu)
 
         logger.debug(
-            f"Built ASDU: type={asdu.type_id}, COT={asdu.cot}, ASDU addr={asdu.asdu_address}, IOA={asdu.ioa}, value={asdu.value}"
+            f"Built ASDU: type={asdu.type_id}, COT={asdu.cot}, ASDU addr={asdu.asdu_address}, "
+                f"IOA={asdu.ioa}, value={asdu.value}"
         )
         return bytes(data)
 
@@ -412,7 +413,8 @@ class Iec104Engine(ProtocolEngine):
             )
 
             logger.debug(
-                f"Parsed ASDU: type={type_id}, COT={cot}, ASDU addr={asdu_address}, IOA={ioa}, value={value}"
+                f"Parsed ASDU: type={type_id}, COT={cot}, ASDU addr={asdu_address}, IOA={ioa}, "
+                    f"value={value}"
             )
             return asdu
 
@@ -614,7 +616,8 @@ class Iec104Engine(ProtocolEngine):
         self._server_socket.settimeout(1.0)
 
         logger.info(
-            f"IEC 104 server listening on {self.host}:{self.port} (ASDU address={self.asdu_address})"
+            f"IEC 104 server listening on {self.host}:{self.port} "
+            f"(ASDU address={self.asdu_address})"
         )
 
         # Start accept thread

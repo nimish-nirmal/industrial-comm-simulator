@@ -47,14 +47,12 @@ from __future__ import annotations
 
 import logging
 import socket
-import struct
 import threading
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 from src.core.device import Device, SimulationManager
-from src.protocols.base import ProtocolConfig, ProtocolEngine, ProtocolState
+from src.protocols.base import ProtocolConfig, ProtocolEngine
 
 logger = logging.getLogger(__name__)
 
@@ -184,7 +182,8 @@ class LogicalNode:
     @property
     def name(self) -> str:
         """Get the full LN name (e.g., 'MMXU1', 'XCBR2')."""
-        return f"{self.prefix}{self.ln_class}{self.instance}" if self.prefix else f"{self.ln_class}{self.instance}"
+        return f"{self.prefix}{self.ln_class}{self.instance}" if self.prefix else \
+            f"{self.ln_class}{self.instance}"
 
 
 @dataclass
@@ -511,7 +510,8 @@ class Iec61850Engine(ProtocolEngine):
         self._logical_devices[ld_name] = ld
 
         logger.info(
-            f"Created Logical Device '{ld_name}' with {len(ld.logical_nodes)} LNs for device '{device.device_id}'"
+            f"Created Logical Device '{ld_name}' with "
+                f"{len(ld.logical_nodes)} LNs for device '{device.device_id}'"
         )
         return ld
 
@@ -670,7 +670,8 @@ class Iec61850Engine(ProtocolEngine):
                                     device.device_id, signal_name, float_val
                                 )
                                 logger.debug(
-                                    f"MMS Write -> simulation: {device.device_id}.{signal_name} = {float_val}"
+                                    f"MMS Write -> simulation: "
+                                    f"{device.device_id}.{signal_name} = {float_val}"
                                 )
                                 break
                 break
@@ -699,7 +700,8 @@ class Iec61850Engine(ProtocolEngine):
                             da.value = value
                             da.timestamp = 0.0
                             logger.debug(
-                                f"Updated IEC 61850 attribute after external command: {ld_name}/{ln_name}/{do_name}.{da_name} = {value}"
+                                f"Updated IEC 61850 attribute after external command: "
+                                    f"{ld_name}/{ln_name}/{do_name}.{da_name} = {value}"
                             )
 
     def get_data_model(self) -> Dict[str, Any]:

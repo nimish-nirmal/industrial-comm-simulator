@@ -48,9 +48,9 @@ def power_signals():
 @pytest.fixture
 def sample_device():
     """Provide a sample device with water tank signals."""
-    from src.core.device import DeviceConfig, Device, DeviceRole
+    from src.core.device import Device, DeviceConfig, DeviceRole
     from src.core.physics import water_tank_profiles
-    
+
     config = DeviceConfig(
         device_id="test-tank",
         name="Test Tank",
@@ -65,7 +65,7 @@ def sample_device():
 def sample_cluster(sample_device):
     """Provide a sample cluster with one device."""
     from src.core.device import ClusterConfig, DeviceCluster
-    
+
     config = ClusterConfig(
         cluster_id="test-cluster",
         name="Test Cluster",
@@ -77,8 +77,8 @@ def sample_cluster(sample_device):
 @pytest.fixture
 def simulation_manager(sample_cluster):
     """Provide a simulation manager with one cluster."""
-    from src.core.device import SimulationManager, ClusterConfig
-    
+    from src.core.device import SimulationManager
+
     sim = SimulationManager()
     sim.add_cluster(sample_cluster.config)
     return sim

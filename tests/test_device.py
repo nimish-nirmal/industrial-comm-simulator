@@ -1,18 +1,13 @@
 """Tests for Device, DeviceCluster, and SimulationManager."""
 from __future__ import annotations
 
-import pytest
-
 from src.core.device import (
     ClusterConfig,
-    Device,
-    DeviceCluster,
     DeviceConfig,
     DeviceRole,
-    DeviceCluster,
     SimulationManager,
 )
-from src.core.physics import SignalProfile, SignalState, SignalType, UnitCategory, water_tank_profiles
+from src.core.physics import SignalState
 
 
 class TestDevice:
@@ -59,13 +54,12 @@ class TestDevice:
         # Tank Level has bounds 0-10
         sample_device.set_value("Tank Level", 15.0)
         assert sample_device.get_value("Tank Level") == 10.0
-        
+
         sample_device.set_value("Tank Level", -5.0)
         assert sample_device.get_value("Tank Level") == 0.0
 
     def test_device_step(self, sample_device):
         """Test device step() advances simulation."""
-        initial = sample_device.get_value("Tank Level")
         sample_device.step(1.0)
         new_value = sample_device.get_value("Tank Level")
         # Value should change (or stay same due to randomness)
@@ -117,7 +111,7 @@ class TestDeviceCluster:
     def test_cluster_add_device(self, sample_cluster):
         """Test adding a device to cluster."""
         from src.core.physics import SignalProfile, SignalType
-        
+
         new_config = DeviceConfig(
             device_id="new-device",
             name="New Device",
@@ -134,7 +128,7 @@ class TestDeviceCluster:
                 )
             ],
         )
-        
+
         device = sample_cluster.add_device(new_config)
         assert device.device_id == "new-device"
         assert len(sample_cluster.devices) == 2
@@ -212,13 +206,13 @@ class TestSimulationManager:
     def test_register_update_callback(self, simulation_manager):
         """Test registering update callback."""
         callback_called = []
-        
+
         def callback(data):
             callback_called.append(True)
-        
+
         simulation_manager.register_update_callback(callback)
         simulation_manager.step(1.0)
-        
+
         assert len(callback_called) == 1
 
     def test_to_dict(self, simulation_manager):
@@ -230,7 +224,7 @@ class TestSimulationManager:
     def test_multiple_clusters(self):
         """Test simulation with multiple clusters."""
         sim = SimulationManager()
-        
+
         # Add first cluster
         config1 = ClusterConfig(
             cluster_id="cluster-1",
@@ -238,7 +232,7 @@ class TestSimulationManager:
             devices=[],
         )
         sim.add_cluster(config1)
-        
+
         # Add second cluster
         config2 = ClusterConfig(
             cluster_id="cluster-2",
@@ -246,7 +240,7 @@ class TestSimulationManager:
             devices=[],
         )
         sim.add_cluster(config2)
-        
+
         assert len(sim.clusters) == 2
         assert sim.get_cluster("cluster-1") is not None
         assert sim.get_cluster("cluster-2") is not None

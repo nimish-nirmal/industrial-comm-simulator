@@ -40,10 +40,10 @@ import threading
 import time
 import base64
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 from src.core.device import Device, SimulationManager
-from src.protocols.base import ProtocolConfig, ProtocolEngine, ProtocolState
+from src.protocols.base import ProtocolConfig, ProtocolEngine
 
 logger = logging.getLogger(__name__)
 
@@ -469,7 +469,9 @@ class WebSocketEngine(ProtocolEngine):
                     client.subscribed_signals.add(signal_name)
 
                 logger.info(
-                    f"Client {client.addr} subscribed to {'all' if not signal_name else signal_name} signals for device '{device_id}'"
+                    f"Client {client.addr} subscribed to "
+                    f"{'all' if not signal_name else signal_name} "
+                    f"signals for device '{device_id}'"
                 )
 
                 self._send_message(

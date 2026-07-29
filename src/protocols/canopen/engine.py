@@ -235,7 +235,8 @@ class CanopenEngine(ProtocolEngine):
         self._object_dictionary[index][subindex] = entry
 
         logger.debug(
-            f"Added OD entry: 0x{index:04X}:{subindex:02X} '{name}' (type={data_type}, access={access})"
+            f"Added OD entry: 0x{index:04X}:{subindex:02X} '{name}' (type={data_type}, "
+                f"access={access})"
         )
 
     def _init_communication_profile(self) -> None:
@@ -365,7 +366,8 @@ class CanopenEngine(ProtocolEngine):
             self._signal_to_od[signal_name] = (device_index, subindex)
 
         logger.info(
-            f"Mapped device '{device.device_id}' to OD index 0x{device_index:04X} with {num_signals} signals"
+            f"Mapped device '{device.device_id}' to OD index 0x{device_index:04X} with "
+                f"{num_signals} signals"
         )
 
     def _setup_pdo_mapping(self, device: Device) -> None:
@@ -409,7 +411,8 @@ class CanopenEngine(ProtocolEngine):
         self._pdo_mappings[2] = rpdo1
 
         logger.debug(
-            f"PDO mapping: TPDO1 has {len(tpdo1.mapped_entries)} entries, RPDO1 has {len(rpdo1.mapped_entries)} entries"
+            f"PDO mapping: TPDO1 has {len(tpdo1.mapped_entries)} entries, "
+                f"RPDO1 has {len(rpdo1.mapped_entries)} entries"
         )
 
     def _encode_sdo_data(self, data_type: int, value: Any) -> bytes:
@@ -523,7 +526,9 @@ class CanopenEngine(ProtocolEngine):
                                         float(new_value),
                                     )
                                     logger.debug(
-                                        f"SDO download -> simulation: {device.device_id}.{signal_name} = {new_value}"
+                                        f"SDO download -> "
+                                            f"simulation: "
+                                        f"{device.device_id}.{signal_name} = {new_value}"
                                     )
                                     break
                     break
@@ -695,7 +700,8 @@ class CanopenEngine(ProtocolEngine):
 
             if len(data) < len(mapping.mapped_entries):
                 logger.warning(
-                    f"RPDO{1} data too short: {len(data)} bytes for {len(mapping.mapped_entries)} entries"
+                    f"RPDO{1} data too short: {len(data)} bytes for "
+                        f"{len(mapping.mapped_entries)} entries"
                 )
                 continue
 
@@ -730,7 +736,9 @@ class CanopenEngine(ProtocolEngine):
                                                     float(new_value),
                                                 )
                                                 logger.debug(
-                                                    f"RPDO -> simulation: {device.device_id}.{signal_name} = {new_value}"
+                                                    f"RPDO -> "
+                                                        f"simulation: "
+                                        f"{device.device_id}.{signal_name} = {new_value}"
                                                 )
                                                 break
                                 break
@@ -835,7 +843,8 @@ class CanopenEngine(ProtocolEngine):
         tpdo_data = self._build_tpdo_message()
         if tpdo_data:
             logger.debug(
-                f"TPDO1 data for device '{device.device_id}': {tpdo_data.hex()} ({len(tpdo_data)} bytes)"
+                f"TPDO1 data for "
+                    f"device '{device.device_id}': {tpdo_data.hex()} ({len(tpdo_data)} bytes)"
             )
 
     def _handle_external_command(

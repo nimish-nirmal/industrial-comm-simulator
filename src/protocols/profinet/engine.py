@@ -172,7 +172,8 @@ class ProfinetEngine(ProtocolEngine):
         self._pn_devices[device.device_id] = pn_device
 
         logger.debug(
-            f"Registered device '{device.device_id}' as PROFINET IO device with {len(pn_device.subslots)} subslots in slot {slot}"
+            f"Registered device '{device.device_id}' as PROFINET IO device with "
+                f"{len(pn_device.subslots)} subslots in slot {slot}"
         )
         return pn_device
 
@@ -294,7 +295,8 @@ class ProfinetEngine(ProtocolEngine):
             return b""
         service_id = data[0]
         xid = struct.unpack_from("<I", data, 2)[0]
-        logger.info(f"DCP Set request from {addr[0]}:{addr[1]}, service=0x{service_id:02X}, xid=0x{xid:08X}")
+        logger.info(f"DCP Set request from {addr[0]}:{addr[1]}, "
+            f"service=0x{service_id:02X}, xid=0x{xid:08X}")
         response = struct.pack("<BB", service_id, DCP_SERVICE_TYPE_RESPONSE_SUCCESS)
         response += struct.pack("<I", xid)
         response += struct.pack("<HH", 0, 0)
@@ -304,7 +306,8 @@ class ProfinetEngine(ProtocolEngine):
         """Handle incoming PROFINET RT data (output data from controller)."""
         frame_id = frame["frame_id"]
         payload = frame["payload"]
-        logger.debug(f"RT data frame: id=0x{frame_id:04X}, {len(payload)} bytes from {addr[0]}:{addr[1]}")
+        logger.debug(f"RT data frame: id=0x{frame_id:04X}, "
+            f"{len(payload)} bytes from {addr[0]}:{addr[1]}")
 
         if frame_id >= PNIO_FRAME_ID_RTC:
             self._handle_rtc_data(frame_id, payload)
@@ -354,7 +357,8 @@ class ProfinetEngine(ProtocolEngine):
             value = self._unpack_subslot_data(pn_subslot, iod_data)
             if value is not None:
                 self.handle_command(device_id, pn_subslot.signal_name, value)
-                logger.debug(f"RTC output: {device_id}.{pn_subslot.signal_name} = {value} (cycle={data_cycle_counter})")
+                logger.debug(f"RTC output: {device_id}.{pn_subslot.signal_name} = "
+                    f"{value} (cycle={data_cycle_counter})")
 
             offset += data_size
 
@@ -366,7 +370,8 @@ class ProfinetEngine(ProtocolEngine):
         service_id = data[0]
         service_type = data[1]
 
-        logger.debug(f"DCP frame: service=0x{service_id:02X}, type=0x{service_type:02X} from {addr[0]}:{addr[1]}")
+        logger.debug(f"DCP frame: service=0x{service_id:02X}, "
+            f"type=0x{service_type:02X} from {addr[0]}:{addr[1]}")
 
         if service_type == DCP_SERVICE_TYPE_REQUEST:
             if service_id == DCP_SERVICE_ID_IDENTIFY:
@@ -384,7 +389,10 @@ class ProfinetEngine(ProtocolEngine):
         self._udp_socket.bind((self.host, self.port))
         self._udp_socket.settimeout(1.0)
 
-        logger.info(f"PROFINET IO device listening on {self.host}:{self.port} (station_name={self.station_name})")
+        logger.info(
+            f"PROFINET IO device listening on {self.host}:{self.port} "
+            f"(station_name={self.station_name})"
+        )
 
     def _stop_engine(self) -> None:
         """Stop the PROFINET IO UDP server."""
@@ -419,7 +427,8 @@ class ProfinetEngine(ProtocolEngine):
             try:
                 self._udp_socket.sendto(rt_frame, ("<broadcast>", self.port))
                 logger.debug(
-                    f"Published {len(rt_frame)} bytes for device '{device.device_id}' (cycle={pn_device.data_cycle_counter})"
+                    f"Published {len(rt_frame)} bytes for "
+                        f"device '{device.device_id}' (cycle={pn_device.data_cycle_counter})"
                 )
             except Exception as e:
                 logger.error(f"Failed to publish RT frame: {e}")
@@ -434,7 +443,8 @@ class ProfinetEngine(ProtocolEngine):
                     device = self.simulation.get_device(device_id) if self.simulation else None
                     if device:
                         subslot.output_data = self._pack_subslot_data(device, subslot)
-                        logger.debug(f"Updated subslot ({subslot.slot}, {subslot.subslot}) output data")
+                        logger.debug(f"Updated subslot ({subslot.slot}, "
+                            f"{subslot.subslot}) output data")
                     break
 
     def _update(self) -> None:

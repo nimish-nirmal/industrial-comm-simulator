@@ -73,7 +73,10 @@ class Device:
             self.signals[profile.name] = state
 
         self._initialized = True
-        logger.debug(f"Device '{config.name}' ({config.device_id}) initialized with {len(self.signals)} signals")
+        logger.debug(
+            f"Device '{config.name}' ({config.device_id}) initialized with "
+            f"{len(self.signals)} signals"
+        )
 
     @property
     def device_id(self) -> str:
@@ -181,7 +184,8 @@ class DeviceCluster:
 
         self._initialized = True
         logger.info(
-            f"Cluster '{config.name}' ({config.cluster_id}) initialized with {len(self.devices)} devices"
+            f"Cluster '{config.name}' ({config.cluster_id}) initialized with "
+            f"{len(self.devices)} devices"
         )
 
     @property

@@ -1,18 +1,12 @@
 """Tests for PhysicsEngine and signal simulation."""
 from __future__ import annotations
 
-import pytest
-
 from src.core.physics import (
     PhysicsConfig,
     PhysicsEngine,
     SignalProfile,
-    SignalState,
     SignalType,
-    UnitCategory,
     water_tank_profiles,
-    hvac_profiles,
-    power_grid_profiles,
 )
 
 
@@ -23,7 +17,7 @@ class TestPhysicsEngine:
         """Test that signals are properly registered."""
         profiles = water_tank_signals
         states = physics_engine.add_signals(profiles)
-        
+
         assert len(states) == len(profiles)
         assert len(physics_engine.signals) == len(profiles)
         for state in states:
@@ -33,7 +27,7 @@ class TestPhysicsEngine:
         """Test that initial values are set correctly."""
         physics_engine.add_signals(water_tank_signals)
         values = physics_engine.get_all_values()
-        
+
         # Check that values are within bounds
         for name, state in physics_engine.signals.items():
             assert state.profile.min_value <= values[name] <= state.profile.max_value
@@ -42,7 +36,7 @@ class TestPhysicsEngine:
         """Test that step() returns values for all signals."""
         physics_engine.add_signals(water_tank_signals)
         values = physics_engine.step(1.0)
-        
+
         assert len(values) == len(water_tank_signals)
         for profile in water_tank_signals:
             assert profile.name in values
@@ -50,17 +44,17 @@ class TestPhysicsEngine:
     def test_deterministic_mode(self, physics_engine):
         """Test that same seed produces same results."""
         profiles = water_tank_profiles()
-        
+
         # Run first simulation
         engine1 = PhysicsEngine(PhysicsConfig(seed=42))
         engine1.add_signals(profiles)
         vals1 = [engine1.step(1.0)["Tank Level"] for _ in range(5)]
-        
+
         # Run second simulation with same seed
         engine2 = PhysicsEngine(PhysicsConfig(seed=42))
         engine2.add_signals(profiles)
         vals2 = [engine2.step(1.0)["Tank Level"] for _ in range(5)]
-        
+
         assert vals1 == vals2
 
     def test_signal_clamping(self, physics_engine):
@@ -75,11 +69,11 @@ class TestPhysicsEngine:
             drift_amplitude=0.0,
         )
         physics_engine.add_signal(profile)
-        
+
         # Set value above max
         physics_engine.set_value("Test Signal", 150.0)
         assert physics_engine.get_value("Test Signal") == 100.0
-        
+
         # Set value below min
         physics_engine.set_value("Test Signal", -50.0)
         assert physics_engine.get_value("Test Signal") == 0.0
@@ -96,7 +90,7 @@ class TestPhysicsEngine:
             drift_amplitude=0.0,
         )
         physics_engine.add_signal(profile)
-        
+
         # Step should produce 0 or 1
         for _ in range(10):
             values = physics_engine.step(1.0)
@@ -114,7 +108,7 @@ class TestPhysicsEngine:
             drift_amplitude=0.0,
         )
         physics_engine.add_signal(profile)
-        
+
         # Step should produce integer values
         for _ in range(10):
             values = physics_engine.step(1.0)
@@ -132,7 +126,7 @@ class TestPhysicsEngine:
             drift_amplitude=0.0,
         )
         physics_engine.add_signal(profile)
-        
+
         prev_value = physics_engine.get_value("Counter Test")
         for _ in range(10):
             values = physics_engine.step(1.0)
@@ -143,14 +137,14 @@ class TestPhysicsEngine:
     def test_reset(self, physics_engine, water_tank_signals):
         """Test reset() returns signals to initial values."""
         physics_engine.add_signals(water_tank_signals)
-        
+
         # Step several times
         for _ in range(10):
             physics_engine.step(1.0)
-        
+
         # Reset
         physics_engine.reset()
-        
+
         # Check all values are back to initial
         for name, state in physics_engine.signals.items():
             assert state.current_value == state.profile.initial_value
@@ -167,10 +161,10 @@ class TestPhysicsEngine:
             initial_value=15.0,
         )
         physics_engine.add_signal(profile)
-        
+
         physics_engine.set_value("Clamp Test", 25.0)
         assert physics_engine.get_value("Clamp Test") == 20.0
-        
+
         physics_engine.set_value("Clamp Test", 5.0)
         assert physics_engine.get_value("Clamp Test") == 10.0
 
@@ -185,9 +179,9 @@ class TestPhysicsEngine:
         )
         physics_engine.add_signal(profile)
         state = physics_engine.signals["Pct Test"]
-        
+
         assert state.percentage == 50.0
-        
+
         physics_engine.set_value("Pct Test", 25.0)
         assert physics_engine.signals["Pct Test"].percentage == 25.0
 
@@ -201,10 +195,10 @@ class TestPhysicsEngine:
             initial_value=50.0,
         )
         physics_engine.add_signal(profile)
-        
+
         # At midpoint, should be stable
         assert physics_engine.signals["Stable Test"].is_stable is True
-        
+
         # At extreme, should be unstable
         physics_engine.set_value("Stable Test", 95.0)
         assert physics_engine.signals["Stable Test"].is_stable is False
@@ -220,7 +214,7 @@ class TestPhysicsEngine:
         )
         physics_engine.add_signal(profile)
         assert "To Remove" in physics_engine.signals
-        
+
         physics_engine.remove_signal("To Remove")
         assert "To Remove" not in physics_engine.signals
 
@@ -234,16 +228,16 @@ class TestPhysicsEngine:
             initial_value=50.0,
         )
         physics_engine.add_signal(profile)
-        
+
         callback_values = []
-        
+
         def callback(values):
             callback_values.append(values["Callback Test"])
             if len(callback_values) >= 3:
                 physics_engine.stop()
-        
+
         physics_engine.run_continuous(interval=0.01, callback=callback, max_steps=3)
-        
+
         assert len(callback_values) == 3
 
     def test_physics_features_disabled(self):
@@ -255,7 +249,7 @@ class TestPhysicsEngine:
             enable_cross_coupling=False,
         )
         engine = PhysicsEngine(config)
-        
+
         profile = SignalProfile(
             name="No Physics",
             signal_type=SignalType.ANALOG,
@@ -266,7 +260,7 @@ class TestPhysicsEngine:
             drift_rate=1.0,
         )
         engine.add_signal(profile)
-        
+
         # Step multiple times
         for _ in range(10):
             values = engine.step(1.0)
@@ -308,14 +302,14 @@ class TestPhysicsEngine:
         )
         physics_engine.add_signal(profile1)
         physics_engine.add_signal(profile2)
-        
+
         # Manually set Signal B to a different value to create deviation
         physics_engine.set_value("Signal B", 80.0)
-        
+
         # Step multiple times to accumulate coupling effect
         for _ in range(5):
             values = physics_engine.step(1.0)
-        
+
         # Signal A should be affected by Signal B's deviation from initial
         # Signal B is at 80, initial is 50, deviation = 30
         # With coupling factor 0.5: coupling = 0.5 * 30 * dt = 15 per step

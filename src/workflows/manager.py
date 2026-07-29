@@ -16,45 +16,41 @@ import os
 import signal
 import sys
 import time
-from dataclasses import dataclass, field
-from pathlib import Path
+from dataclasses import dataclass
 from threading import Thread
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Dict, Optional
 
 from src.config.settings import Settings, load_settings
 from src.core.device import (
     ClusterConfig,
     DeviceConfig,
-    DeviceCluster,
     DeviceRole,
     SimulationManager,
 )
 from src.core.physics import (
-    PhysicsConfig,
-    PhysicsEngine,
     SignalProfile,
     SignalType,
     UnitCategory,
-    water_tank_profiles,
     hvac_profiles,
     power_grid_profiles,
+    water_tank_profiles,
 )
-from src.protocols.base import ProtocolConfig, ProtocolEngine, ProtocolRegistry
-from src.protocols.modbus import ModbusEngine
+from src.protocols.base import ProtocolConfig, ProtocolRegistry
 from src.protocols.bacnet import BacnetEngine
-from src.protocols.mqtt import MqttEngine
-from src.protocols.opcua import OpcUaEngine
-from src.protocols.siemens import SiemensEngine
-from src.protocols.http import HttpEngine
-from src.protocols.sparkplug import SparkplugEngine
+from src.protocols.canopen import CanopenEngine
 from src.protocols.dnp3 import Dnp3Engine
 from src.protocols.ethernetip import EthernetIpEngine
-from src.protocols.profinet import ProfinetEngine
-from src.protocols.canopen import CanopenEngine
-from src.protocols.iec61850 import Iec61850Engine
-from src.protocols.iec104 import Iec104Engine
-from src.protocols.websocket import WebSocketEngine
 from src.protocols.grpc import GrpcEngine
+from src.protocols.http import HttpEngine
+from src.protocols.iec104 import Iec104Engine
+from src.protocols.iec61850 import Iec61850Engine
+from src.protocols.modbus import ModbusEngine
+from src.protocols.mqtt import MqttEngine
+from src.protocols.opcua import OpcUaEngine
+from src.protocols.profinet import ProfinetEngine
+from src.protocols.siemens import SiemensEngine
+from src.protocols.sparkplug import SparkplugEngine
+from src.protocols.websocket import WebSocketEngine
 
 logger = logging.getLogger(__name__)
 
@@ -116,7 +112,9 @@ class WorkflowManager:
         2. Register and start protocol engines
         3. Start health monitoring
         """
-        logger.info(f"Initializing {self.settings.simulator_name} v{self.settings.simulator_version}")
+        logger.info(
+            f"Initializing {self.settings.simulator_name} v{self.settings.simulator_version}"
+        )
         self._start_time = time.time()
 
         # Step 1: Create default clusters
@@ -144,7 +142,8 @@ class WorkflowManager:
                 name="Main Water Tank",
                 role=DeviceRole.TANK,
                 protocol="modbus",
-                description="Primary water storage tank with level, temperature, and flow monitoring",
+                description="Primary water storage tank with level,"
+                    "temperature, and flow monitoring",
                 signal_profiles=water_tank_profiles(),
             ),
             DeviceConfig(
@@ -331,7 +330,8 @@ class WorkflowManager:
         self.simulation.add_cluster(power_cluster)
 
         logger.info(
-            f"Created {len(self.simulation.clusters)} clusters with {sum(len(c.devices) for c in self.simulation.clusters.values())} devices"
+            f"Created {len(self.simulation.clusters)} clusters with "
+                f"{sum(len(c.devices) for c in self.simulation.clusters.values())} devices"
         )
 
     def _register_protocols(self) -> None:
@@ -565,7 +565,8 @@ class WorkflowManager:
                     for device in cluster.devices.values()
                 )
                 logger.info(
-                    f"Status: {len(self.simulation.clusters)} clusters, {device_count} devices, {signal_count} signals, {self.registry.count} protocols active"
+                    f"Status: {len(self.simulation.clusters)} clusters, {device_count} devices, "
+                        f"{signal_count} signals, {self.registry.count} protocols active"
                 )
             except Exception as e:
                 logger.error(f"Status log error: {e}")

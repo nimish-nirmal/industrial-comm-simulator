@@ -152,7 +152,9 @@ class _SimulationHandler(BaseHTTPRequestHandler):
                 signal_name = parts[2]
                 value = float(data.get("value", 0))
                 self.engine.handle_command(device_id, signal_name, value)
-                self._send_json({"status": "ok", "device_id": device_id, "signal": signal_name, "value": value})
+                self._send_json({ "status": "ok", "device_id": device_id, "signal": signal_name,
+                    "value": value
+                })
 
             else:
                 self._send_error_json(f"Unknown path: {self.path}", 404)

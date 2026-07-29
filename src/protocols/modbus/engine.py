@@ -56,9 +56,10 @@ from __future__ import annotations
 import logging
 import struct
 from threading import Lock
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Dict, Optional
 
 from pymodbus.datastore import ModbusSequentialDataBlock, ModbusServerContext
+
 try:
     from pymodbus.device import ModbusDeviceIdentification
 except ImportError:
@@ -67,16 +68,18 @@ except ImportError:
     except ImportError:
         # ModbusDeviceIdentification not available in newer pymodbus versions
         ModbusDeviceIdentification = None
-from pymodbus.server import StartTcpServer, StartSerialServer
+
+from pymodbus.server import StartSerialServer, StartTcpServer
+
 try:
-    from pymodbus.server import StopServer, StopSerialServer
+    from pymodbus.server import StopSerialServer, StopServer
 except ImportError:
     # StopServer/StopSerialServer not available in newer pymodbus versions
     StopServer = None
     StopSerialServer = None
 
 from src.core.device import Device, SimulationManager
-from src.protocols.base import ProtocolConfig, ProtocolEngine, ProtocolState
+from src.protocols.base import ProtocolConfig, ProtocolEngine
 
 logger = logging.getLogger(__name__)
 
@@ -164,8 +167,10 @@ class ModbusEngine(ProtocolEngine):
 
     def _start_serial_engine(self) -> None:
         """Start the Modbus RTU/ASCII serial server."""
-        logger.info(f"Starting Modbus serial server on {self.serial_port} at {self.serial_baud} baud")
-        
+        logger.info(
+            f"Starting Modbus serial server on {self.serial_port} at {self.serial_baud} baud"
+        )
+
         # Initialize data store with 10000 registers
         block = ModbusSequentialDataBlock(0, [0] * 10000)
         self._context = ModbusServerContext(slaves={1: block}, single=True)

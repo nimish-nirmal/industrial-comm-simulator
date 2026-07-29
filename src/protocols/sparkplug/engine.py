@@ -114,12 +114,16 @@ class SparkplugEngine(ProtocolEngine):
     def _on_connect(self, client: mqtt.Client, userdata: Any, flags: dict, rc: int) -> None:
         """Callback for MQTT connection."""
         if rc == 0:
-            logger.info(f"Sparkplug connected to MQTT broker at {self.broker_host}:{self.broker_port}")
+            logger.info(
+            f"Sparkplug connected to MQTT broker at {self.broker_host}:{self.broker_port}"
+        )
             # Publish birth certificates
             self._publish_nbirth()
             self._publish_dbirt()
             # Subscribe to device commands
-            cmd_topic = self._topic("spBv1.0", self.group_id, "DCMD", self.edge_node, self.device_id)
+            cmd_topic = self._topic( "spBv1.0", self.group_id, "DCMD", self.edge_node,
+                self.device_id
+            )
             client.subscribe(cmd_topic, qos=1)
         else:
             logger.error(f"Sparkplug MQTT connection failed with code {rc}")

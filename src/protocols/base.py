@@ -217,7 +217,10 @@ class ProtocolEngine(ABC):
         }
 
     def __repr__(self) -> str:
-        return f"ProtocolEngine(name={self.name}, protocol={self.protocol_name}, state={self.state.value})"
+        return (
+            f"ProtocolEngine(name={self.name}, protocol={self.protocol_name}, "
+            f"state={self.state.value})"
+        )
 
 
 class ProtocolRegistry:
