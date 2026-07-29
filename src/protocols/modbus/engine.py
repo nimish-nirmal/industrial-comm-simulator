@@ -62,7 +62,11 @@ from pymodbus.datastore import ModbusSequentialDataBlock, ModbusServerContext
 try:
     from pymodbus.device import ModbusDeviceIdentification
 except ImportError:
-    from pymodbus.server import ModbusDeviceIdentification
+    try:
+        from pymodbus.server import ModbusDeviceIdentification
+    except ImportError:
+        # ModbusDeviceIdentification not available in newer pymodbus versions
+        ModbusDeviceIdentification = None
 from pymodbus.server import StartTcpServer
 from pymodbus.server import StopServer
 from pymodbus.server import StartSerialServer
@@ -136,14 +140,16 @@ class ModbusEngine(ProtocolEngine):
         block = ModbusSequentialDataBlock(0, [0] * 10000)
         self._context = ModbusServerContext(slaves={1: block}, single=True)
 
-        # Set device identification
-        identity = ModbusDeviceIdentification()
-        identity.VendorName = "IndustrialCommSimulator"
-        identity.ProductCode = "ICS"
-        identity.VendorUrl = "https://github.com/nimish-nirmal/industrial-comm-simulator"
-        identity.ProductName = "Industrial Communication Simulator"
-        identity.ModelName = "Modbus Simulator"
-        identity.MajorMinorRevision = "1.0"
+        # Set device identification (if available)
+        identity = None
+        if ModbusDeviceIdentification:
+            identity = ModbusDeviceIdentification()
+            identity.VendorName = "IndustrialCommSimulator"
+            identity.ProductCode = "ICS"
+            identity.VendorUrl = "https://github.com/nimish-nirmal/industrial-comm-simulator"
+            identity.ProductName = "Industrial Communication Simulator"
+            identity.ModelName = "Modbus Simulator"
+            identity.MajorMinorRevision = "1.0"
 
         # Start server in a separate thread
         StartTcpServer(
@@ -161,13 +167,15 @@ class ModbusEngine(ProtocolEngine):
         block = ModbusSequentialDataBlock(0, [0] * 10000)
         self._context = ModbusServerContext(slaves={1: block}, single=True)
 
-        # Set device identification
-        identity = ModbusDeviceIdentification()
-        identity.VendorName = "IndustrialCommSimulator"
-        identity.ProductCode = "ICS"
-        identity.ProductName = "Industrial Communication Simulator"
-        identity.ModelName = "Modbus RTU Simulator"
-        identity.MajorMinorRevision = "1.0"
+        # Set device identification (if available)
+        identity = None
+        if ModbusDeviceIdentification:
+            identity = ModbusDeviceIdentification()
+            identity.VendorName = "IndustrialCommSimulator"
+            identity.ProductCode = "ICS"
+            identity.ProductName = "Industrial Communication Simulator"
+            identity.ModelName = "Modbus RTU Simulator"
+            identity.MajorMinorRevision = "1.0"
 
         # Start serial server
         StartSerialServer(

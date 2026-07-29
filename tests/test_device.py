@@ -12,7 +12,7 @@ from src.core.device import (
     DeviceCluster,
     SimulationManager,
 )
-from src.core.physics import SignalProfile, SignalType, UnitCategory, water_tank_profiles
+from src.core.physics import SignalProfile, SignalState, SignalType, UnitCategory, water_tank_profiles
 
 
 class TestDevice:
