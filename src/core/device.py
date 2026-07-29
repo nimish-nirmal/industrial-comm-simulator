@@ -14,6 +14,7 @@ from enum import Enum
 from typing import Any, Callable, Dict, List, Optional
 
 from src.core.physics import (
+    PhysicsConfig,
     PhysicsEngine,
     SignalProfile,
     SignalState,
