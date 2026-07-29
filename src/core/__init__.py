@@ -1,0 +1,1 @@
+"""Industrial Communication Simulator - Core Physics & Device Engine."""

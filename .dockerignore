@@ -1,0 +1,56 @@
+# Git
+.git
+.gitignore
+README.md
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+venv
+.venv
+*.egg-info
+dist
+build
+
+# Tests
+tests/
+.pytest_cache
+.coverage
+htmlcov
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Scripts
+scripts/
+
+# Configs (will be mounted as volume)
+configs/
+
+# Logs and scenarios
+logs/
+scenarios/
+
+# Environment files
+.env
+.env.local
+
+# Documentation
+docs/
+*.md

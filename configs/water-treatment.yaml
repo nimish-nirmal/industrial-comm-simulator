@@ -1,0 +1,153 @@
+# Water Treatment Plant Simulation Scenario
+# ==========================================
+# Example configuration for a water treatment plant simulation
+
+simulator:
+  name: WaterTreatmentSim
+  version: "1.0.0"
+  log_level: INFO
+
+physics:
+  update_interval: 1.0
+  enable_noise: true
+  enable_drift: true
+  enable_cross_coupling: true
+  seed: 42
+
+clusters:
+  - id: water-treatment
+    name: Water Treatment System
+    description: Main water treatment plant with sedimentation and filtration
+    tags:
+      area: treatment
+      priority: critical
+
+    devices:
+      - id: sedimentation-tank
+        name: Sedimentation Tank
+        role: tank
+        protocol: modbus
+        description: Primary sedimentation tank
+        signals:
+          - name: Water Level
+            type: analog
+            unit: m
+            min: 0.0
+            max: 8.0
+            initial: 4.5
+            noise: 0.05
+            drift: 0.02
+          - name: Turbidity
+            type: analog
+            unit: NTU
+            min: 0.0
+            max: 50.0
+            initial: 15.0
+            noise: 0.5
+            drift: 0.1
+          - name: Sludge Level
+            type: analog
+            unit: m
+            min: 0.0
+            max: 3.0
+            initial: 1.2
+            noise: 0.03
+            drift: 0.01
+
+      - id: chemical-dosing
+        name: Chemical Dosing Unit
+        role: controller
+        protocol: modbus
+        description: Chemical dosing for water treatment
+        signals:
+          - name: Chlorine Level
+            type: analog
+            unit: ppm
+            min: 0.0
+            max: 5.0
+            initial: 2.0
+            noise: 0.1
+            drift: 0.02
+          - name: pH Level
+            type: analog
+            unit: pH
+            min: 0.0
+            max: 14.0
+            initial: 7.2
+            noise: 0.05
+            drift: 0.01
+          - name: Flow Rate
+            type: analog
+            unit: L/min
+            min: 0.0
+            max: 500.0
+            initial: 250.0
+            noise: 2.0
+            drift: 1.0
+
+  - id: filtration
+    name: Filtration System
+    description: Multi-stage filtration system
+    tags:
+      area: filtration
+      stage: secondary
+
+    devices:
+      - id: sand-filter
+        name: Sand Filter
+        role: generic
+        protocol: bacnet
+        description: Pressure sand filter
+        signals:
+          - name: Inlet Pressure
+            type: analog
+            unit: bar
+            min: 0.0
+            max: 6.0
+            initial: 3.0
+            noise: 0.1
+            drift: 0.05
+          - name: Outlet Pressure
+            type: analog
+            unit: bar
+            min: 0.0
+            max: 5.0
+            initial: 2.5
+            noise: 0.1
+            drift: 0.05
+          - name: Differential Pressure
+            type: analog
+            unit: bar
+            min: 0.0
+            max: 2.0
+            initial: 0.5
+            noise: 0.05
+            drift: 0.02
+          - name: Backwash Status
+            type: binary
+            unit: ""
+            min: 0.0
+            max: 1.0
+            initial: 0.0
+            noise: 0.0
+            drift: 0.0
+
+protocols:
+  modbus:
+    enabled: true
+    host: "0.0.0.0"
+    port: 5020
+  bacnet:
+    enabled: true
+    ip: "0.0.0.0"
+    port: 47808
+    device_id: 1001
+  mqtt:
+    enabled: true
+    broker_host: localhost
+    broker_port: 1883
+    publish_interval: 5
+  http:
+    enabled: true
+    host: "0.0.0.0"
+    port: 8080

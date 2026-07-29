@@ -1,0 +1,254 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  # Job 1: Code Quality Checks
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install black ruff mypy pytest
+      
+      - name: Check code formatting (black)
+        run: |
+          black --check --diff src/ tests/
+        continue-on-error: false
+      
+      - name: Lint with ruff
+        run: |
+          ruff check src/ tests/
+        continue-on-error: false
+      
+      - name: Type check with mypy
+        run: |
+          mypy src/ --ignore-missing-imports
+        continue-on-error: false
+
+  # Job 2: Unit Tests
+  test-unit:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pytest pytest-cov pydantic pydantic-settings
+          pip install -e .
+      
+      - name: Run physics engine tests
+        run: |
+          pytest tests/test_physics.py -v --cov=src/core/physics --cov-report=xml
+      
+      - name: Run device model tests
+        run: |
+          pytest tests/test_device.py -v --cov=src/core/device --cov-report=xml
+      
+      - name: Run protocol instantiation tests
+        run: |
+          pytest tests/test_all_protocols.py -v
+      
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          flags: unit-tests
+          name: unit-coverage
+
+  # Job 3: Protocol Import Validation
+  test-protocols:
+    name: Protocol Import Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install core dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pydantic pydantic-settings
+          pip install -e .
+      
+      - name: Validate all protocol imports
+        run: |
+          python3 -c "
+          import sys
+          sys.path.insert(0, '.')
+          
+          protocols = [
+              ('modbus', 'ModbusEngine'),
+              ('bacnet', 'BacnetEngine'),
+              ('mqtt', 'MqttEngine'),
+              ('opcua', 'OpcUaEngine'),
+              ('siemens', 'SiemensEngine'),
+              ('http', 'HttpEngine'),
+              ('sparkplug', 'SparkplugEngine'),
+              ('dnp3', 'Dnp3Engine'),
+              ('ethernetip', 'EthernetIpEngine'),
+              ('profinet', 'ProfinetEngine'),
+              ('canopen', 'CanopenEngine'),
+              ('iec61850', 'Iec61850Engine'),
+              ('iec104', 'Iec104Engine'),
+              ('websocket', 'WebSocketEngine'),
+              ('grpc', 'GrpcEngine'),
+          ]
+          
+          failed = []
+          for protocol, class_name in protocols:
+              try:
+                  module = __import__(f'src.protocols.{protocol}', fromlist=[class_name])
+                  engine_class = getattr(module, class_name)
+                  engine = engine_class(name='test')
+                  assert engine.protocol_name == protocol
+                  print(f'✓ {protocol}')
+              except Exception as e:
+                  print(f'✗ {protocol}: {e}')
+                  failed.append(protocol)
+          
+          if failed:
+              print(f'\\nFailed: {failed}')
+              sys.exit(1)
+          else:
+              print(f'\\n✓ All {len(protocols)} protocols validated')
+          "
+      
+      - name: Validate configuration loading
+        run: |
+          python3 -c "
+          import sys
+          sys.path.insert(0, '.')
+          from src.config.settings import load_settings
+          
+          # Test loading .env.example
+          settings = load_settings('.env.example')
+          assert settings.simulator_name == 'IndustrialCommSimulator'
+          assert len(settings.active_protocol_list) > 0
+          print(f'✓ Configuration loaded: {len(settings.active_protocol_list)} active protocols')
+          "
+
+  # Job 4: Docker Build Test
+  test-docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: industrial-simulator:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      
+      - name: Test Docker image
+        run: |
+          docker run --rm industrial-simulator:test python3 -m src.main --list-protocols
+          docker run --rm industrial-simulator:test python3 -m src.main --dry-run
+
+  # Job 5: Integration Tests (Optional - requires services)
+  test-integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: [test-unit, test-protocols, test-docker]
+    
+    services:
+      mosquitto:
+        image: eclipse-mosquitto:2.0.18
+        ports:
+          - 1883:1883
+        options: >-
+          --health-cmd "mosquitto_pub -h localhost -t test -m hello"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pytest pymodbus paho-mqtt
+          pip install -e .
+      
+      - name: Wait for Mosquitto
+        run: |
+          sleep 5
+          mosquitto_pub -h localhost -t test -m "hello"
+      
+      - name: Test MQTT protocol
+        run: |
+          pytest tests/test_all_protocols.py::TestAllProtocols::test_mqtt_engine -v
+      
+      - name: Test Sparkplug protocol
+        run: |
+          pytest tests/test_all_protocols.py::TestAllProtocols::test_sparkplug_engine -v
+
+  # Job 6: Status Check Aggregator
+  status-check:
+    name: All Checks Passed
+    runs-on: ubuntu-latest
+    needs: [code-quality, test-unit, test-protocols, test-docker]
+    
+    steps:
+      - name: Check all jobs
+        run: |
+          echo "✓ Code Quality: Passed"
+          echo "✓ Unit Tests: Passed"
+          echo "✓ Protocol Validation: Passed"
+          echo "✓ Docker Build: Passed"
+          echo ""
+          echo "All CI checks passed! Ready to merge."
+      
+      - name: Create status badge
+        run: |
+          echo "![CI](https://github.com/nimish-nirmal/industrial-comm-simulator/workflows/CI%20Pipeline/badge.svg)" >> $GITHUB_STEP_SUMMARY

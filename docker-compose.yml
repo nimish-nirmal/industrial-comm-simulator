@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  simulator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: industrial-simulator
+    restart: unless-stopped
+    ports:
+      - "5020:5020"    # Modbus TCP
+      - "47808:47808"  # BACnet
+      - "1883:1883"    # MQTT
+      - "4840:4840"    # OPC UA
+      - "8080:8080"    # HTTP REST API
+      - "20000:20000"  # DNP3
+      - "44818:44818"  # EtherNet/IP
+      - "34964:34964"  # PROFINET
+      - "102:102"      # IEC 61850
+      - "2404:2404"    # IEC 104
+      - "8765:8765"    # WebSocket
+      - "50051:50051"  # gRPC
+    environment:
+      - SIMULATOR_NAME=IndustrialCommSimulator
+      - SIMULATOR_VERSION=1.0.0
+      - LOG_LEVEL=INFO
+      - ACTIVE_PROTOCOLS=modbus,bacnet,mqtt,opcua,siemens,http,sparkplug
+      - PHYSICS_UPDATE_INTERVAL=1.0
+      - PHYSICS_ENABLE_NOISE=true
+      - PHYSICS_ENABLE_DRIFT=true
+      - PHYSICS_ENABLE_CROSS_COUPLING=true
+      - PHYSICS_SEED=42
+      - MODBUS_ENABLED=true
+      - MODBUS_TCP_HOST=0.0.0.0
+      - MODBUS_TCP_PORT=5020
+      - BACNET_ENABLED=true
+      - BACNET_IP=0.0.0.0
+      - BACNET_PORT=47808
+      - MQTT_ENABLED=true
+      - MQTT_BROKER_HOST=mosquitto
+      - MQTT_BROKER_PORT=1883
+      - OPCUA_ENABLED=true
+      - OPCUA_ENDPOINT=opc.tcp://0.0.0.0:4840
+      - HTTP_ENABLED=true
+      - HTTP_HOST=0.0.0.0
+      - HTTP_PORT=8080
+      - SPARKPLUG_ENABLED=true
+    volumes:
+      - ./configs:/app/configs:ro
+      - ./scenarios:/app/scenarios
+      - ./logs:/app/logs
+    networks:
+      - industrial-net
+    depends_on:
+      - mosquitto
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  mosquitto:
+    image: eclipse-mosquitto:2.0.18
+    container_name: industrial-mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./configs/mosquitto:/mosquitto/config:ro
+    networks:
+      - industrial-net
+    healthcheck:
+      test: ["CMD", "mosquitto_pub", "-h", "localhost", "-t", "test", "-m", "hello"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  industrial-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
