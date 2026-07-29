@@ -59,7 +59,10 @@ from threading import Lock
 from typing import Any, Dict, List, Optional, Tuple
 
 from pymodbus.datastore import ModbusSequentialDataBlock, ModbusServerContext
-from pymodbus.device import ModbusDeviceIdentification
+try:
+    from pymodbus.device import ModbusDeviceIdentification
+except ImportError:
+    from pymodbus.server import ModbusDeviceIdentification
 from pymodbus.server import StartTcpServer
 from pymodbus.server import StopServer
 from pymodbus.server import StartSerialServer

@@ -295,21 +295,29 @@ class TestPhysicsEngine:
             initial_value=50.0,
             noise_amplitude=0.0,
             drift_amplitude=0.0,
-            coupling_factors={"Signal B": 1.0},
+            coupling_factors={"Signal B": 0.5},  # Strong coupling
         )
         profile2 = SignalProfile(
             name="Signal B",
             signal_type=SignalType.ANALOG,
             min_value=0.0,
             max_value=100.0,
-            initial_value=80.0,  # Different from initial
+            initial_value=50.0,  # Same initial as Signal A
             noise_amplitude=0.0,
             drift_amplitude=0.0,
         )
         physics_engine.add_signal(profile1)
         physics_engine.add_signal(profile2)
         
-        # Step and check coupling effect
-        values = physics_engine.step(1.0)
+        # Manually set Signal B to a different value to create deviation
+        physics_engine.set_value("Signal B", 80.0)
+        
+        # Step multiple times to accumulate coupling effect
+        for _ in range(5):
+            values = physics_engine.step(1.0)
+        
         # Signal A should be affected by Signal B's deviation from initial
+        # Signal B is at 80, initial is 50, deviation = 30
+        # With coupling factor 0.5: coupling = 0.5 * 30 * dt = 15 per step
+        # After 5 steps: Signal A should have moved significantly from 50
         assert values["Signal A"] != 50.0  # Should change due to coupling
