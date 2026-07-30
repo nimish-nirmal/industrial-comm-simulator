@@ -6,7 +6,7 @@ Uses pydantic-settings to load from .env files with full validation.
 
 from __future__ import annotations
 
-from typing import Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -270,7 +270,7 @@ class Settings(BaseSettings):
         proto_settings = settings_map.get(protocol)
         return proto_settings.enabled if hasattr(proto_settings, "enabled") else True
 
-    def parse_default_devices(self) -> List[Dict[str, str]]:
+    def parse_default_devices(self) -> List[Dict[str, Any]]:
         """
         Parse the DEFAULT_DEVICES string into device configs.
 

@@ -229,6 +229,7 @@ class Dnp3Engine(ProtocolEngine):
         """Accept incoming DNP3 master connections."""
         while self._running_internal:
             try:
+                assert self._server_socket is not None
                 client, addr = self._server_socket.accept()
                 with self._lock:
                     self._clients.append(client)

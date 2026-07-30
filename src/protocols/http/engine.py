@@ -90,19 +90,19 @@ class _SimulationHandler(BaseHTTPRequestHandler):
                     self._send_json(all_devices)
                 elif len(parts) == 2:
                     # GET /devices/{device_id}
-                    device = self.engine.simulation.get_device(parts[1])
-                    if device:
-                        self._send_json(device.to_dict())
+                    found_device = self.engine.simulation.get_device(parts[1])
+                    if found_device:
+                        self._send_json(found_device.to_dict())
                     else:
                         self._send_error_json(f"Device '{parts[1]}' not found", 404)
                 elif len(parts) == 3:
                     # GET /devices/{device_id}/{signal_name}
-                    device = self.engine.simulation.get_device(parts[1])
-                    if device:
-                        signal = device.get_signal(parts[2])
+                    found_device = self.engine.simulation.get_device(parts[1])
+                    if found_device:
+                        signal = found_device.get_signal(parts[2])
                         if signal:
                             self._send_json({
-                                "device_id": device.device_id,
+                                "device_id": found_device.device_id,
                                 "signal": parts[2],
                                 "value": signal.current_value,
                                 "unit": signal.profile.unit,

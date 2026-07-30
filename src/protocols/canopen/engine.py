@@ -870,7 +870,7 @@ class CanopenEngine(ProtocolEngine):
 
         Useful for debugging and monitoring.
         """
-        od_dump = {}
+        od_dump: Dict[str, Dict[str, Dict[str, Any]]] = {}
         for index, subentries in self._object_dictionary.items():
             index_key = f"0x{index:04X}"
             od_dump[index_key] = {}

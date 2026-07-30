@@ -631,6 +631,7 @@ class Iec104Engine(ProtocolEngine):
         """Accept incoming IEC 104 connections."""
         while self._running:
             try:
+                assert self._server_socket is not None
                 client_socket, addr = self._server_socket.accept()
                 client_thread = threading.Thread(
                     target=self._handle_client,
