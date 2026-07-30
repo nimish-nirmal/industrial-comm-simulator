@@ -1,5 +1,14 @@
 # Industrial Communication Simulator
 
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/nimish-nirmal/industrial-comm-simulator/actions/workflows/ci.yml/badge.svg)](https://github.com/nimish-nirmal/industrial-comm-simulator/actions/workflows/ci.yml)
+[![pytest](https://img.shields.io/badge/pytest-tested-green.svg)](https://docs.pytest.org/)
+[![pydantic](https://img.shields.io/badge/pydantic-validated-blue.svg)](https://docs.pydantic.dev/)
+[![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://www.docker.com/)
+[![ruff](https://img.shields.io/badge/ruff-linted-green.svg)](https://docs.astral.sh/ruff/)
+[![mypy](https://img.shields.io/badge/mypy-typed-red.svg)](https://mypy.readthedocs.io/)
+
 A **production-ready** industrial protocol simulator with **physics-backed device values**. Simulates realistic industrial processes with noise, drift, and cross-coupling between physical quantities, exposed through multiple industrial protocols simultaneously.
 
 ## Features
