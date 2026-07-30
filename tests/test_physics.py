@@ -315,3 +315,4 @@ class TestPhysicsEngine:
         # With coupling factor 0.5: coupling = 0.5 * 30 * dt = 15 per step
         # After 5 steps: Signal A should have moved significantly from 50
         assert values["Signal A"] != 50.0  # Should change due to coupling
+

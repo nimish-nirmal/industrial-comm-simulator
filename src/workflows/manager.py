@@ -35,8 +35,8 @@ from src.core.physics import (
     power_grid_profiles,
     water_tank_profiles,
 )
-from src.protocols.base import ProtocolConfig, ProtocolRegistry
 from src.protocols.bacnet import BacnetEngine
+from src.protocols.base import ProtocolConfig, ProtocolRegistry
 from src.protocols.canopen import CanopenEngine
 from src.protocols.dnp3 import Dnp3Engine
 from src.protocols.ethernetip import EthernetIpEngine
@@ -640,9 +640,10 @@ class WorkflowManager:
     def load_scenario(self, path: str) -> None:
         """Load a simulation scenario from file."""
         with open(path, "r") as f:
-            state = json.load(f)
+            json.load(f)
 
         # TODO: Implement scenario loading
+        # state = json.load(f)  # Uncomment when scenario loading is implemented
         logger.info(f"Scenario loaded from {path}")
 
     @property

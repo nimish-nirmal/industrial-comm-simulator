@@ -119,9 +119,13 @@ class _SimulationHandler(BaseHTTPRequestHandler):
 
             elif parts[0] == "health":
                 # GET /health - Health status
+                clusters_data = {
+                    cid: cluster.to_dict()
+                    for cid, cluster in self.engine.simulation.clusters.items()
+                }
                 self._send_json({
                     "status": "running",
-                    "protocols": self.engine.simulation.clusters,
+                    "clusters": clusters_data,
                 })
 
             else:

@@ -340,7 +340,7 @@ class Iec104Engine(ProtocolEngine):
         """Build the information object data for an ASDU."""
         if asdu.type_id == M_SP_NA_1:
             # Single-point: SIQ (Status and Indication Qualifier)
-            # Bit 0 = SP (signal value), Bits 1-3 = quality, Bit 4 = BL, Bit 5 = SB, Bit 6 = NT, Bit 7 = IV
+            # Bit 0 = SP, Bits 1-3 = quality, Bit 4 = BL, Bit 5 = SB, Bit 6 = NT, Bit 7 = IV
             siq = (1 if asdu.value else 0) | (asdu.quality << 1)
             return struct.pack("<B", siq)
 
@@ -385,7 +385,6 @@ class Iec104Engine(ProtocolEngine):
 
         try:
             type_id = data[0]
-            vsq = data[1]
             cot = struct.unpack_from("<H", data, 2)[0]
             asdu_address = struct.unpack_from("<H", data, 4)[0]
             ioa = struct.unpack_from("<I", data, 6)[0] & 0xFFFFFF

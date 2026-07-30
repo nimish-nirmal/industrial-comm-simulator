@@ -387,7 +387,6 @@ class EthernetIpEngine(ProtocolEngine):
                     CIP_SERVICE_SET_ATTRIBUTE_SINGLE, 0x07
                 )
 
-            attribute_id = service_data[0]
             data_length = struct.unpack_from("<H", service_data, 1)[0]
             attribute_data = service_data[3 : 3 + data_length]
 

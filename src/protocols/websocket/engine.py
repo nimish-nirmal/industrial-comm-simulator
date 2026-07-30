@@ -44,6 +44,21 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 
 from src.core.device import Device, SimulationManager
 from src.protocols.base import ProtocolConfig, ProtocolEngine
+from src.protocols.bacnet import BacnetEngine
+from src.protocols.canopen import CanopenEngine
+from src.protocols.dnp3 import Dnp3Engine
+from src.protocols.ethernetip import EthernetIpEngine
+from src.protocols.grpc import GrpcEngine
+from src.protocols.http import HttpEngine
+from src.protocols.iec104 import Iec104Engine
+from src.protocols.iec61850 import Iec61850Engine
+from src.protocols.modbus import ModbusEngine
+from src.protocols.mqtt import MqttEngine
+from src.protocols.opcua import OpcUaEngine
+from src.protocols.profinet import ProfinetEngine
+from src.protocols.siemens import SiemensEngine
+from src.protocols.sparkplug import SparkplugEngine
+from src.protocols.websocket import WebSocketEngine
 
 logger = logging.getLogger(__name__)
 
