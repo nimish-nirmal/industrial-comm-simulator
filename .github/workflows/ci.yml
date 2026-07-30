@@ -38,7 +38,7 @@ jobs:
         run: |
           ruff check src/ tests/
 
-      - name: Type check
+      - name: Type check (continue on error)
         continue-on-error: true
         run: |
           mypy src/ --ignore-missing-imports
