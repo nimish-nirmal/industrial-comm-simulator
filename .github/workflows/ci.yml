@@ -94,9 +94,6 @@ jobs:
         image: eclipse-mosquitto:2.0.18
         ports:
           - 1883:1883
-        volumes:
-          - ./configs/mosquitto:/mosquitto/config:ro
-        command: mosquitto -c /mosquitto/config/mosquitto.conf
 
     steps:
       - uses: actions/checkout@v5
