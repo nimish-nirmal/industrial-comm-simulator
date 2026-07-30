@@ -60,6 +60,12 @@ echo "  Physics update interval: ${PHYSICS_UPDATE_INTERVAL:-1.0}s"
 echo ""
 
 # Start the simulator
+if [ $# -gt 0 ]; then
+    # If arguments are provided, run the command directly (e.g., --dry-run, --list-protocols)
+    echo "Running: $@"
+    exec "$@"
+fi
+
 echo "Starting simulator..."
 python -m src.main &
 SIMULATOR_PID=$!
