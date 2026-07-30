@@ -184,7 +184,6 @@ class WebSocketEngine(ProtocolEngine):
 
         # Validate WebSocket upgrade
         upgrade = headers.get("upgrade", "").lower()
-        connection = headers.get("connection", "").lower()
         ws_key = headers.get("sec-websocket-key", "")
         ws_version = headers.get("sec-websocket-version", "")
 
@@ -216,7 +215,7 @@ class WebSocketEngine(ProtocolEngine):
         client_socket.sendall(response.encode("utf-8"))
 
         logger.debug(
-            f"WebSocket handshake completed for client "
+            "WebSocket handshake completed for client "
         )
         return True
 
