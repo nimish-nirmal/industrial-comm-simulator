@@ -194,11 +194,9 @@ jobs:
         image: eclipse-mosquitto:2.0.18
         ports:
           - 1883:1883
-        options: >-
-          --health-cmd "mosquitto_pub -h localhost -t test -m hello"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        volumes:
+          - ./configs/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+        command: mosquitto -c /mosquitto/config/mosquitto.conf
     
     steps:
       - name: Checkout code
@@ -222,8 +220,14 @@ jobs:
       
       - name: Wait for Mosquitto
         run: |
-          sleep 5
-          mosquitto_pub -h localhost -t test -m "hello"
+          for i in $(seq 1 30); do
+            if mosquitto_pub -h localhost -t test -m "hello" 2>/dev/null; then
+              echo "Mosquitto is ready!"
+              break
+            fi
+            echo "Waiting for Mosquitto... ($i/30)"
+            sleep 2
+          done
       
       - name: Test MQTT protocol
         run: |
