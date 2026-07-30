@@ -216,6 +216,10 @@ jobs:
           pip install pytest pymodbus paho-mqtt
           pip install -e .
       
+      - name: Install Mosquitto clients
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq mosquitto-clients
+      
       - name: Wait for Mosquitto
         run: |
           sleep 5
